@@ -19,7 +19,7 @@ public class AWR {
 	private long dbid = -1;
 	
 	protected AWR() {
-      // Exists only to defeat instantiation.
+		// Exists only to defeat instantiation.
 	}
 	   
 	/**
@@ -111,7 +111,7 @@ public class AWR {
 		switch (mode) {
 			case HTML: {
 				stmt = conn.prepareStatement(
-						"SELECT * FROM TABLE(DBMS_WORKLOAD_REPOSITORY.AWR_REPORT_TEXT(?, 1, ?, ?))");
+						"SELECT * FROM TABLE(DBMS_WORKLOAD_REPOSITORY.AWR_REPORT_HTML(?, 1, ?, ?))");
 				break;
 			}
 			case TEXT:
