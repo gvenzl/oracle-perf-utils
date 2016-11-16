@@ -12,7 +12,7 @@ import java.sql.SQLException;
  */
 public class AWR {
 	
-	private Connection conn = null;
+	private Connection myConn = null;
 	private static AWR instance = null;
 	private int beginSnapshot = -1;
 	private int endSnapshot = -1;
@@ -33,8 +33,12 @@ public class AWR {
 		return instance;
 	}
 
+	/**
+	 * Sets the connection to be used for AWR generation
+	 * @param conn The connection to be used for AWR generation
+	 */
 	public void setConnection(Connection conn) {
-		this.conn = conn;
+		myConn = conn;
 	}
 	
 	/**
@@ -43,11 +47,11 @@ public class AWR {
 	 */
 	public void createSnapshot() throws SQLException {
 		
-		if (null == conn) {
+		if (null == myConn) {
 			throw new SQLException("No connection to the database");
 		}
 		
-		PreparedStatement stmt = conn.prepareStatement(
+		PreparedStatement stmt = myConn.prepareStatement(
 				"SELECT DBMS_WORKLOAD_REPOSITORY.CREATE_SNAPSHOT() FROM dual");
 		ResultSet rslt = stmt.executeQuery();
 		rslt.next();
@@ -74,11 +78,11 @@ public class AWR {
 			return;
 		}
 		
-		if (null == conn) {
+		if (null == myConn) {
 			throw new SQLException("No connection to the database");
 		}
 		
-		PreparedStatement stmt = conn.prepareStatement("SELECT dbid FROM v$database");
+		PreparedStatement stmt = myConn.prepareStatement("SELECT dbid FROM v$database");
 		ResultSet rslt = stmt.executeQuery();
 		rslt.next();
 		dbid = rslt.getLong(1);
@@ -93,12 +97,12 @@ public class AWR {
 	 * @throws SQLException Any SQL error that occurs during the operation
 	 */
 	public String getAWRReport(AWR_MODE mode) throws SQLException {
-		if (null == conn) {
+		if (null == myConn) {
 			throw new SQLException("No connection to the database");
 		}
 		
 		if (beginSnapshot == -1) {
-			throw new SQLException("No begin snapshot availabe, create begin and end snapshots first!");
+			throw new SQLException("No begin snapshot available, create begin and end snapshots first!");
 		}
 		
 		if (endSnapshot == -1) {
@@ -110,13 +114,13 @@ public class AWR {
 		PreparedStatement stmt;
 		switch (mode) {
 			case HTML: {
-				stmt = conn.prepareStatement(
+				stmt = myConn.prepareStatement(
 						"SELECT * FROM TABLE(DBMS_WORKLOAD_REPOSITORY.AWR_REPORT_HTML(?, 1, ?, ?))");
 				break;
 			}
 			case TEXT:
 			default: {
-				stmt = conn.prepareStatement(
+				stmt = myConn.prepareStatement(
 						"SELECT * FROM TABLE(DBMS_WORKLOAD_REPOSITORY.AWR_REPORT_TEXT(?, 1, ?, ?))");
 			}
 		}
