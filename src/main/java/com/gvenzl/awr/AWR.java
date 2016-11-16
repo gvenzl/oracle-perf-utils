@@ -139,4 +139,14 @@ public class AWR {
 		stmt.close();
 		return retAWRReport;
 	}
+	
+	/**
+	 * Closes the connection to the database.
+	 * This can be used to avoid long lived connections to the database.
+	 * @throws SQLException Any SQL error that occurs on closing the connection.
+	 */
+	public void closeConnection() throws SQLException {
+		myConn.close();
+		myConn = null;
+	}
 }
