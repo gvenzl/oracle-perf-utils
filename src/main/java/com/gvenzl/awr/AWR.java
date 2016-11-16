@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Exposes various Automatic Workload Repository (AWR) interfaces
+ * Exposes various Automatic Workload Repository (AWR) interfaces.
  * @author gvenzl
  *
  */
@@ -20,10 +20,11 @@ public class AWR {
 	
 	protected AWR() {
 		// Exists only to defeat instantiation.
+		// The AWR class is a global representation, i.e only one instance exists.
 	}
 	   
 	/**
-	 * Returns an instance of the AWR class
+	 * Returns an instance of the AWR class.
 	 * @return An instance of the AWR class
 	 */
 	public static AWR getInstance() {
@@ -34,7 +35,7 @@ public class AWR {
 	}
 
 	/**
-	 * Sets the connection to be used for AWR generation
+	 * Sets the connection to be used for AWR generation.
 	 * @param conn The connection to be used for AWR generation
 	 */
 	public void setConnection(Connection conn) {
@@ -42,7 +43,7 @@ public class AWR {
 	}
 	
 	/**
-	 * Creates a new snapshot
+	 * Creates a new snapshot.
 	 * @throws SQLException	Any SQL error that occurs during the operation
 	 */
 	public void createSnapshot() throws SQLException {
@@ -68,7 +69,7 @@ public class AWR {
 	}
 	
 	/**
-	 * Sets the DBID for AWR generation
+	 * Sets the DBID for AWR generation.
 	 * @param conn	A connection to the database
 	 * @throws SQLException Any SQL error that occurs during the operation
 	 */
@@ -91,22 +92,23 @@ public class AWR {
 	}
 	
 	/**
-	 * Returns an AWR report in plain text
+	 * Returns an AWR report in plain text.
 	 * @param mode The {@link} AWR_MODE format of the report
 	 * @return The AWR report
 	 * @throws SQLException Any SQL error that occurs during the operation
+	 * @throw OutOfSequenceException An error with the snapshot sequence between begin and end snapshot
 	 */
-	public String getAWRReport(AWR_MODE mode) throws SQLException {
+	public String getAWRReport(AWR_MODE mode) throws SQLException, OutOfSequenceException {
 		if (null == myConn) {
 			throw new SQLException("No connection to the database");
 		}
 		
 		if (beginSnapshot == -1) {
-			throw new SQLException("No begin snapshot available, create begin and end snapshots first!");
+			throw new OutOfSequenceException("No begin snapshot available, create begin and end snapshots first!");
 		}
 		
 		if (endSnapshot == -1) {
-			throw new SQLException("No end snapshot available, create begin snapshot first!");
+			throw new OutOfSequenceException("No end snapshot available, create end snapshot first!");
 		}
 		
 		setDBID();
