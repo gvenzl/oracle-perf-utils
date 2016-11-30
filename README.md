@@ -32,5 +32,5 @@ awr.createSnapshot();
 /********************/
 awr.createSnapshot();
 String awrReport = 
-	awr.getAWRReport(AWR_MODE.TEXT);
+	awr.getAWRReport(AWR_MODE.HTML);
 ```
