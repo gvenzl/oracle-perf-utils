@@ -9,16 +9,14 @@ A collection of APIs for various Oracle performance tuning features.
 Connection dbConnection = DriverManager.getConnection(
     "jdbc:oracle:thin:system/<your password>@//localhost:1521/ORCLCDB");
 				
-AWR awr = AWR.getInstance();
-awr.setConnection(dbConnection);
+AWR awr = new AWR(dbConnection);
 awr.createSnapshot();
 /********************/
 /*** DO SOME WORK ***/
 /********************/
 awr.createSnapshot();
 String awrReport = 
-    awr.getAWRReport(AWR_MODE.TEXT);
-awr.closeConnection();
+	awr.getAWRReport(AWR_MODE.TEXT);
 ```
 
 ### Create an HTML based AWR Report
@@ -26,15 +24,13 @@ awr.closeConnection();
 ```java
 Connection dbConnection = DriverManager.getConnection(
     "jdbc:oracle:thin:system/<your password>@//localhost:1521/ORCLCDB");
-		
-AWR awr = AWR.getInstance();
-awr.setConnection(dbConnection);
+				
+AWR awr = new AWR(dbConnection);
 awr.createSnapshot();
 /********************/
 /*** DO SOME WORK ***/
 /********************/
 awr.createSnapshot();
 String awrReport = 
-    awr.getAWRReport(AWR_MODE.HTML);
-awr.closeConnection();
+	awr.getAWRReport(AWR_MODE.TEXT);
 ```

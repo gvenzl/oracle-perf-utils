@@ -13,30 +13,39 @@ import java.sql.SQLException;
 public class AWR {
 	
 	private Connection myConn = null;
-	private static AWR instance = null;
 	private int beginSnapshot = -1;
 	private int endSnapshot = -1;
 	private long dbid = -1;
 	
-	protected AWR() {
-		// Exists only to defeat instantiation.
-		// The AWR class is a global representation, i.e only one instance exists.
-	}
-	   
+	private final SQLException noConnectionException =
+			new SQLException("No connection to the database!");
+	
+	private final OutOfSequenceException noBeginOutOfSequenceException =
+			new OutOfSequenceException("No begin snapshot available, create begin and end snapshots first!");
+	
+	private final OutOfSequenceException noEndOutOfSequenceException =
+			new OutOfSequenceException("No end snapshot available, create end snapshot first!");
+	
 	/**
-	 * Returns an instance of the AWR class.
-	 * @return An instance of the AWR class
+	 * Constructs a new AWR object.
 	 */
-	public static AWR getInstance() {
-		if(instance == null) {
-			instance = new AWR();
-		}
-		return instance;
+	public AWR() {
+	}
+	
+	/**
+	 * Constructs a new AWR object.
+	 * @param conn The connection to be used for AWR generation.
+	 * The connection being used needs privileges on DBMS_WORKLOAD_REPOSITORY and V$DATABASE.
+	 * 
+	 */
+	public AWR(Connection conn) {
+		myConn = conn;
 	}
 
 	/**
 	 * Sets the connection to be used for AWR generation.
-	 * @param conn The connection to be used for AWR generation
+	 * @param conn The connection to be used for AWR generation.
+	 * The connection being used needs privileges on DBMS_WORKLOAD_REPOSITORY and V$DATABASE.
 	 */
 	public void setConnection(Connection conn) {
 		myConn = conn;
@@ -44,12 +53,13 @@ public class AWR {
 	
 	/**
 	 * Creates a new snapshot.
+	 * @return The snapshot id
 	 * @throws SQLException	Any SQL error that occurs during the operation
 	 */
-	public void createSnapshot() throws SQLException {
+	public Integer createSnapshot() throws SQLException {
 		
 		if (null == myConn) {
-			throw new SQLException("No connection to the database");
+			throw noConnectionException;
 		}
 		
 		PreparedStatement stmt = myConn.prepareStatement(
@@ -66,6 +76,9 @@ public class AWR {
 		else {
 			endSnapshot = id;
 		}
+		
+		// Return snapshot id
+		return Integer.valueOf(id);
 	}
 	
 	/**
@@ -80,7 +93,7 @@ public class AWR {
 		}
 		
 		if (null == myConn) {
-			throw new SQLException("No connection to the database");
+			throw noConnectionException;
 		}
 		
 		PreparedStatement stmt = myConn.prepareStatement("SELECT dbid FROM v$database");
@@ -96,19 +109,19 @@ public class AWR {
 	 * @param mode The {@link} AWR_MODE format of the report
 	 * @return The AWR report
 	 * @throws SQLException Any SQL error that occurs during the operation
-	 * @throw OutOfSequenceException An error with the snapshot sequence between begin and end snapshot
+	 * @throws OutOfSequenceException An error with the snapshot sequence between begin and end snapshot
 	 */
 	public String getAWRReport(AWR_MODE mode) throws SQLException, OutOfSequenceException {
 		if (null == myConn) {
-			throw new SQLException("No connection to the database");
+			throw noConnectionException;
 		}
 		
 		if (beginSnapshot == -1) {
-			throw new OutOfSequenceException("No begin snapshot available, create begin and end snapshots first!");
+			throw noBeginOutOfSequenceException;
 		}
 		
 		if (endSnapshot == -1) {
-			throw new OutOfSequenceException("No end snapshot available, create end snapshot first!");
+			throw noEndOutOfSequenceException;
 		}
 		
 		setDBID();
@@ -141,12 +154,28 @@ public class AWR {
 	}
 	
 	/**
-	 * Closes the connection to the database.
-	 * This can be used to avoid long lived connections to the database.
-	 * @throws SQLException Any SQL error that occurs on closing the connection.
+	 * Resets the AWR object.
+	 * This can be used to reset the AWR object and start with a new set of snapshots.
+	 * @param closeDBConnection If the parameter is set to true the connection used will be closed.
+	 * If the parameter is set to false the connection will remain open and is just dereferenced.
 	 */
-	public void closeConnection() throws SQLException {
-		myConn.close();
+	public void reset(boolean closeDBConnection) {
+		if (closeDBConnection) {
+			try { myConn.close(); }
+			catch (SQLException e) { /* Ignore SQLException on close. */ }
+		}
+		reset();
+	}
+	
+	/**
+	 * Resets the AWR object.
+	 * This can be used to reset the AWR object and start with a new set of snapshots.
+	 * The database connection will only be dereferenced but not closed.
+	 */
+	public void reset() {
 		myConn = null;
+		beginSnapshot = -1;
+		endSnapshot = -1;
+		dbid = -1;
 	}
 }
