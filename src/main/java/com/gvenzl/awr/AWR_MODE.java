@@ -1,3 +1,8 @@
+/*
+* author:  gvenzl
+* created: 30 Nov 2016
+*/
+
 package com.gvenzl.awr;
 
 /**
