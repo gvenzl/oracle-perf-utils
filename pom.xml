@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.gvenzl</groupId>
   <artifactId>oracleperfutils</artifactId>
-  <version>0.1.1</version>
+  <version>0.1.2</version>
   <name>Oracle Performance Utilities</name>
   <description>A collection of APIs that interface with various Oracle performance tuning features.</description>
   <build>
