@@ -21,6 +21,7 @@ public class DatabaseInfoTest {
 	private static final String host = "localhost";
 	private static final String port = "1521";
 	private static final String service = "ORCLPDB1";	
+
 	@Before
 	public void setup() throws SQLException {
 		conn = DriverManager.getConnection(

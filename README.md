@@ -93,6 +93,38 @@ rslt.next();
 System.out.println(rslt.getDate(1));
 ```
 
+### Get connection statistics
+```java
+Connection dbConnection = DriverManager.getConnection(
+		"jdbc:oracle:thin:test/test@//localhost:1521/ORCLPDB1");
+
+ConnectionStats stats = new ConnectionStats(dbConnection);
+stats.createSnapshot();
+/********************/
+/*** DO SOME WORK ***/
+/********************/
+stats.createSnapshot();
+HashMap<String, Long> results = stats.getDelta();
+```
+
+### Get connection statistics for a different connection
+```java
+Connection conn = DriverManager.getConnection(
+		"jdbc:oracle:thin:test/test@//localhost:1521/ORCLPDB1");
+
+int sessionId = ConnectionInfoFactory.getConnectionInfo(conn).getSid();
+
+ConnectionStats sessionStats = new ConnectionStats(dbConnection);
+sessionStats.createSnapshot(sessionId);
+/********************/
+/*** DO SOME WORK ***/
+/*** IN THE OTHER ***/
+/***** SESSION ******/
+/********************/
+sessionStats.createSnapshot(sessionId);
+HashMap<String, Long> sessionResults = sessionStats.getDelta();
+```
+
 ## Database attributes
 
 ### Get database information
