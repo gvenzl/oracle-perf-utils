@@ -17,8 +17,8 @@ import java.sql.SQLException;
  */
 public class DatabaseInfo {
 	
-	private static int NO_PRIVILEGES = -1031;
-	private static int TABLE_OR_VIEW_DOES_NOT_EXIST = -942;
+	private static int NO_PRIVILEGES = 1031;
+	private static int TABLE_OR_VIEW_DOES_NOT_EXIST = 942;
 	private String dbName = "";
 	private boolean cdb;
 	private String platformName = "";

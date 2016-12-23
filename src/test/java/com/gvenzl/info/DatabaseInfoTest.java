@@ -69,7 +69,6 @@ public class DatabaseInfoTest {
 	public void test_isCDB() throws SQLException {
 		System.out.println("test_isCDB()");
 		DatabaseInfo dbInfo = new DatabaseInfo(conn);
-		System.out.println(dbInfo.isCDB());
 		Assert.assertTrue(dbInfo.isCDB());
 	}
 }
