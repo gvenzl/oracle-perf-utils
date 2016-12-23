@@ -10,6 +10,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.gvenzl.OutOfSequenceException;
+
 /**
  * Exposes various Automatic Workload Repository (AWR) interfaces.
  * @author gvenzl

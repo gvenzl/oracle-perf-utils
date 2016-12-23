@@ -3,7 +3,7 @@
 * created: 30 Nov 2016
 */
 
-package com.gvenzl.awr;
+package com.gvenzl;
 
 /**
  * Thrown to indicate that the sequence of begin and end snapshot is out of order.

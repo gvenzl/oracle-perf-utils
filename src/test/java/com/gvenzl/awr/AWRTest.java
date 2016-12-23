@@ -15,6 +15,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import com.gvenzl.OutOfSequenceException;
+
 public class AWRTest {
 	
 	private AWR awr;
