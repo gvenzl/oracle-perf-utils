@@ -35,7 +35,7 @@ String awrReport =
 	awr.getAWRReport(AWR_MODE.HTML);
 ```
 
-## Get and set various database connection attributes
+## Database connection attributes
 
 ### Get database connection session identifier (SID)
 ```java
@@ -91,4 +91,20 @@ ConnectionInfo.setNlsDateFormat(dbConnection, "YYYY-MM-DD");
 rslt = stmt.executeQuery();
 rslt.next();
 System.out.println(rslt.getDate(1));
+```
+
+## Database attributes
+
+### Get database information
+```java
+Connection dbConnection = DriverManager.getConnection(
+		"jdbc:oracle:thin:test/test@//localhost:1521/ORCLPDB1");
+
+DatabaseInfo dbInfo = new DatabaseInfo(dbConnection);
+
+dbInfo.getCharacterSet();
+dbInfo.getDBName();
+dbInfo.getPlatformName();
+dbInfo.getVersion();
+dbInfo.isCDB();
 ```

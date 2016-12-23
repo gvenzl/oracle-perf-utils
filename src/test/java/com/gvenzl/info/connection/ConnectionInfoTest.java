@@ -1,3 +1,8 @@
+/*
+* author:  gvenzl
+* created: 21 Dec 2016
+*/
+
 package com.gvenzl.info.connection;
 
 import java.io.File;
