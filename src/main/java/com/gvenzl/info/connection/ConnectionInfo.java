@@ -1,3 +1,8 @@
+/*
+* author:  gvenzl
+* created: 30 Nov 2016
+*/
+
 package com.gvenzl.info.connection;
 
 import java.sql.Connection;
@@ -5,6 +10,11 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.HashMap;
 
+/**
+ * Provides JDBC connection specific information.
+ * @author gvenzl
+ *
+ */
 public class ConnectionInfo {
 
 	private final String	action;

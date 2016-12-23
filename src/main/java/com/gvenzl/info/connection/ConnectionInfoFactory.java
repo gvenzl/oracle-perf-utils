@@ -12,7 +12,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 
 /**
- * Provides JDBC session specific information.
+ * Builds a {@link ConnectionInfo} object.
  * @author gvenzl
  *
  */
