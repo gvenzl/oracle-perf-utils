@@ -31,6 +31,11 @@ public class DatabaseInfo {
 	 * @throws SQLException Any SQL error received while creating the object
 	 */
 	public DatabaseInfo(Connection conn) throws SQLException {
+		
+		if (null == conn || conn.isClosed()) {
+			throw new SQLException ("No connection to the database");
+		}
+		
 		PreparedStatement psDBInfo = conn.prepareStatement(
 				"SELECT name, platform_name, cdb FROM V$DATABASE");
 		PreparedStatement psVersion = conn.prepareStatement(
