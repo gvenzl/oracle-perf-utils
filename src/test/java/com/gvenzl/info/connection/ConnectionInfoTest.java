@@ -133,7 +133,7 @@ public class ConnectionInfoTest {
 	@Test
 	public void test_getDbName() throws SQLException {
 		System.out.println("test_getDbName()");
-		Assert.assertEquals(CDBNAME, ConnectionInfoFactory.getConnectionInfo(conn).getDbName());
+		Assert.assertEquals(CONTAINERNAME, ConnectionInfoFactory.getConnectionInfo(conn).getDbName());
 	}
 	
 	@Test

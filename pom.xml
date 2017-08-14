@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.gvenzl</groupId>
   <artifactId>oracleperfutils</artifactId>
-  <version>0.1.4</version>
+  <version>0.1.5</version>
   <name>Oracle Performance Utilities</name>
   <description>A collection of APIs that interface with various Oracle performance tuning features.</description>
   <build>
@@ -20,8 +20,8 @@
   <dependencies>
   	<dependency>
   		<groupId>com.oracle</groupId>
-  		<artifactId>ojdbc7</artifactId>
-  		<version>12.1.0.2</version>
+  		<artifactId>ojdbc8</artifactId>
+  		<version>12.2.0.1</version>
   	</dependency>
   	<dependency>
   		<groupId>junit</groupId>

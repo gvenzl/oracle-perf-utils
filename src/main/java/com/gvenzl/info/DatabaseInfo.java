@@ -33,7 +33,7 @@ public class DatabaseInfo {
 	public DatabaseInfo(Connection conn) throws SQLException {
 		
 		if (null == conn || conn.isClosed()) {
-			throw new SQLException ("No connection to the database");
+			throw new SQLException ("No connection to the database.");
 		}
 		
 		PreparedStatement psDBInfo = conn.prepareStatement(

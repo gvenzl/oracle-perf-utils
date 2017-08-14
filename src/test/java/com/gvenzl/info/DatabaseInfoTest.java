@@ -7,6 +7,7 @@ package com.gvenzl.info;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.junit.Assert;
@@ -62,7 +63,11 @@ public class DatabaseInfoTest {
 	public void test_getVersion() throws SQLException {
 		System.out.println("test_getVersion()");
 		DatabaseInfo dbInfo = new DatabaseInfo(conn);
-		String expected = "Oracle Database 12c Enterprise Edition Release 12.1.0.2.0 - 64bit Production";
+		
+		ResultSet rslt = conn.createStatement().executeQuery("SELECT banner FROM V$VERSION WHERE banner LIKE 'Oracle Database%'");
+		rslt.next();
+		String expected = rslt.getString(1);
+		
 		Assert.assertEquals(expected, dbInfo.getVersion());
 	}
 	
