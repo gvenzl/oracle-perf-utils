@@ -15,66 +15,88 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class DatabaseInfoTest {
-	
-	private Connection conn;
-	private static final String user = "test";
-	private static final String password = "test";
-	private static final String host = "localhost";
-	private static final String port = "1521";
-	private static final String service = "ORCLPDB1";	
+  
+  private Connection conn;
+  private static final String user = "test";
+  private static final String password = "test";
+  private static final String host = "localhost";
+  private static final String port = "1521";
+  private static final String service = "ORCLPDB1";  
 
-	@Before
-	public void setup() throws SQLException {
-		conn = DriverManager.getConnection(
-				"jdbc:oracle:thin:" + user + "/" + password + "@//" + host + ":" + port + "/" + service);
-	}
-	
-	@Test
-	public void test_instantiation() throws SQLException {
-		System.out.println("test_instantiation()");
-		new DatabaseInfo(conn);
-	}
-	
-	@Test
-	public void test_getCharacterSet() throws SQLException {
-		System.out.println("test_getCharacterSet()");
-		DatabaseInfo dbInfo = new DatabaseInfo(conn);
-		String expected = "AL32UTF8";
-		Assert.assertEquals(expected, dbInfo.getCharacterSet());
-	}
+  @Before
+  public void setup() throws SQLException {
+    conn = DriverManager.getConnection(
+        "jdbc:oracle:thin:" + user + "/" + password + "@//" + host + ":" + port + "/" + service);
+  }
+  
+  @Test
+  public void test_instantiation() throws SQLException {
+    System.out.println("test_instantiation()");
+    new DatabaseInfo(conn);
+  }
+  
+  @Test
+  public void test_getCharacterSet() throws SQLException {
+    System.out.println("test_getCharacterSet()");
+    DatabaseInfo dbInfo = new DatabaseInfo(conn);
+    
+    ResultSet rslt = conn.createStatement().
+        executeQuery("SELECT value FROM V$NLS_PARAMETERS WHERE parameter = 'NLS_CHARACTERSET'");
+    rslt.next();
+    String expected = rslt.getString(1);
+    
+    Assert.assertEquals(expected, dbInfo.getCharacterSet());
+  }
 
-	@Test
-	public void test_getDBName() throws SQLException {
-		System.out.println("test_getDBName()");
-		DatabaseInfo dbInfo = new DatabaseInfo(conn);
-		String expected = "ORCLCDB";
-		Assert.assertEquals(expected, dbInfo.getDBName());
-	}
+  @Test
+  public void test_getDBName() throws SQLException {
+    System.out.println("test_getDBName()");
+    DatabaseInfo dbInfo = new DatabaseInfo(conn);
 
-	@Test
-	public void test_getPlatformName() throws SQLException {
-		System.out.println("test_getPlatformName()");
-		DatabaseInfo dbInfo = new DatabaseInfo(conn);
-		String expected = "Linux x86 64-bit";
-		Assert.assertEquals(expected, dbInfo.getPlatformName());
-	}
+    ResultSet rslt = conn.createStatement().
+        executeQuery("SELECT name FROM V$DATABASE");
+    rslt.next();
+    String expected = rslt.getString(1);
+    
+    Assert.assertEquals(expected, dbInfo.getDBName());
+  }
 
-	@Test
-	public void test_getVersion() throws SQLException {
-		System.out.println("test_getVersion()");
-		DatabaseInfo dbInfo = new DatabaseInfo(conn);
-		
-		ResultSet rslt = conn.createStatement().executeQuery("SELECT banner FROM V$VERSION WHERE banner LIKE 'Oracle Database%'");
-		rslt.next();
-		String expected = rslt.getString(1);
-		
-		Assert.assertEquals(expected, dbInfo.getVersion());
-	}
-	
-	@Test
-	public void test_isCDB() throws SQLException {
-		System.out.println("test_isCDB()");
-		DatabaseInfo dbInfo = new DatabaseInfo(conn);
-		Assert.assertTrue(dbInfo.isCDB());
-	}
+  @Test
+  public void test_getPlatformName() throws SQLException {
+    System.out.println("test_getPlatformName()");
+    DatabaseInfo dbInfo = new DatabaseInfo(conn);
+    
+    ResultSet rslt = conn.createStatement().
+        executeQuery("SELECT platform_name FROM V$DATABASE");
+    rslt.next();
+    String expected = rslt.getString(1);
+    
+    Assert.assertEquals(expected, dbInfo.getPlatformName());
+  }
+
+  @Test
+  public void test_getVersion() throws SQLException {
+    System.out.println("test_getVersion()");
+    DatabaseInfo dbInfo = new DatabaseInfo(conn);
+    
+    ResultSet rslt = conn.createStatement().
+        executeQuery("SELECT banner FROM V$VERSION WHERE banner LIKE 'Oracle Database%'");
+    rslt.next();
+    String expected = rslt.getString(1);
+    
+    Assert.assertEquals(expected, dbInfo.getVersion());
+  }
+  
+  @Test
+  public void test_isCDB() throws SQLException {
+    System.out.println("test_isCDB()");
+    DatabaseInfo dbInfo = new DatabaseInfo(conn);
+
+    ResultSet rslt = conn.createStatement().
+    executeQuery("SELECT cdb FROM V$DATABASE");
+    rslt.next();
+    boolean expected = rslt.getString(1).equals("YES");
+    
+    Assert.assertEquals(expected, dbInfo.isCDB());
+  }
 }
