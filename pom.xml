@@ -2,9 +2,12 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.gvenzl</groupId>
   <artifactId>oracle-perf-utils</artifactId>
-  <version>0.1.5</version>
+  <version>0.1.6</version>
   <name>Oracle Performance Utilities</name>
   <description>A collection of APIs that interface with various Oracle performance tuning features.</description>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
   <build>
     <plugins>
       <plugin>
@@ -14,6 +17,28 @@
           <source>1.8</source>
           <target>1.8</target>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.0.0-M1</version>
+        <configuration></configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <configuration>
+          <descriptor>src/assembly/src.xml</descriptor>
+          <finalName>${pom.artifactId}-${pom.version}</finalName>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+             </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
